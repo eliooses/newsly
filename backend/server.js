@@ -4,17 +4,6 @@ var mongoose = require('mongoose');
 var db = mongoose.connection;
 var request = require('request');
 
-function respond(req, res, next) {
-  res.send({'name' : req.params.name});
-  next();
-}
-
-function test(req, res){
-	var main = "<figure class=\"element element-image\" data-media-id=\"gu-fc-5a0eac9a-d320-4659-8275-045e8e142d06\"> <img src=\"http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2014/10/18/1413635942356/Arsene-Wenger-010.jpg\" alt=\"Arsene Wenger\" width=\"460\" height=\"276\" class=\"gu-image\" /> <figcaption> <span class=\"element-image__caption\">Arsene Wenger’s early years at Arsenal brought huge success but trophies have been more elusive recently. Photograph: Tom Jenkins for the Guardian</span> </figcaption> </figure>";
-	res.send({"image":extractImageURI(main)});
-}
-
-
 db.on('error', console.error);
 db.once('open', function() {
 	// Create your schemas and models here.
@@ -48,21 +37,7 @@ function saveNewsToDb(obj){
 	});
 }
 
-
 function getAllNews(req,res){
-	var json = getAllNewsJson();
-	console.log("from getAllNews" + json);
-	saveNewsToDb(json);
-	/*
-	return Article.find(function(err, articles){
-		if (err) return console.error(err);
-		console.dir(articles);
-	});
-	*/
-}
-
-
-function getAllNewsJson(req,res){
 	var data = request('http://content.guardianapis.com/search?api-key=t3myqd7scnfu4t5w8zp7jx4v&show-fields=headline,trailText,main&page-size=10', function (error, response, body) {
 		if (!error && response.statusCode == 200) {
 			var jsonData = JSON.parse(body);
@@ -84,10 +59,8 @@ function extractImageURI(main){
 }
 
 var server = restify.createServer();
-server.get('/hello/:name', respond);
-server.head('/hello/:name', respond);
-server.get('/getallnewsjson', getAllNewsJson);
 server.get('/getallnews', getAllNews);
+//server.get('');
 
 
 
