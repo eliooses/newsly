@@ -39,7 +39,7 @@ var Article = mongoose.model('Article', ArticleSchema);
 mongoose.connect('mongodb://localhost/test');
 
 
-/*function saveNewsToDb(json){
+function saveNewsToDb(json){
 
 	for(var i = 0; i < json.length; i++){
 		var obj = json[i];
@@ -57,7 +57,7 @@ mongoose.connect('mongodb://localhost/test');
 		});
 	}
 
-}*/
+}
 
 
 
