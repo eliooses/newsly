@@ -1,6 +1,7 @@
 var restify = require('restify');
 var cheerio = require('cheerio');
 var mongoose = require('mongoose');
+var db = mongoose.connection;
 var request = require('request');
 
 function respond(req, res, next) {
@@ -8,22 +9,65 @@ function respond(req, res, next) {
   next();
 }
 
-
-
-
 function test(req, res){
 
 	var main = "<figure class=\"element element-image\" data-media-id=\"gu-fc-5a0eac9a-d320-4659-8275-045e8e142d06\"> <img src=\"http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2014/10/18/1413635942356/Arsene-Wenger-010.jpg\" alt=\"Arsene Wenger\" width=\"460\" height=\"276\" class=\"gu-image\" /> <figcaption> <span class=\"element-image__caption\">Arsene Wenger’s early years at Arsenal brought huge success but trophies have been more elusive recently. Photograph: Tom Jenkins for the Guardian</span> </figcaption> </figure>";
 	res.send({"image":extractImageURI(main)});
 }
 
-function getAllNews(req,res){
+
+
+
+db.on('error', console.error);
+db.once('open', function() {
+// Create your schemas and models here.
+var ArticleSchema = new Schema({
+	id: String,
+	picurl: String,
+	headline: String,
+	trailtext: String,
+	url: String;
+});
+// Compile a 'Movie' model using the movieSchema as the structure.
+// Mongoose also creates a MongoDB collection called 'Movies' for these documents.
+var Article = mongoose.model('Article', ArticleSchema);
+
+
+
+});
+
+mongoose.connect('mongodb://localhost/test');
+
+
+/*function saveNewsToDb(json){
+
+	for(var i = 0; i < json.length; i++){
+		var obj = json[i];
+		var article = new Article({
+			id: obj.id,
+			picurl: String,
+			headline: String,
+			trailtext: String,
+			url: String;
+		});
+
+		article.save(function(err, article) {
+			if (err) return console.error(err);
+			console.dir(article);
+		});
+	}
+
+}*/
+
+
+
+function getAllNewsJson(req,res){
 	var data = request('http://content.guardianapis.com/search?api-key=t3myqd7scnfu4t5w8zp7jx4v&show-fields=headline,trailText&page-size=100', function (error, response, body) {
-  if (!error && response.statusCode == 200) {
-  	var jsonData = JSON.parse(body);
-  	return jsonDataresponse.results;
-  }
-})
+		  if (!error && response.statusCode == 200) {
+		  	var jsonData = JSON.parse(body);
+		  	return jsonDataresponse.results;
+		  }
+	})
 }
 
 function extractImageURI(main){
