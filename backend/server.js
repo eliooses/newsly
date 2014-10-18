@@ -10,7 +10,6 @@ function respond(req, res, next) {
 }
 
 function test(req, res){
-
 	var main = "<figure class=\"element element-image\" data-media-id=\"gu-fc-5a0eac9a-d320-4659-8275-045e8e142d06\"> <img src=\"http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2014/10/18/1413635942356/Arsene-Wenger-010.jpg\" alt=\"Arsene Wenger\" width=\"460\" height=\"276\" class=\"gu-image\" /> <figcaption> <span class=\"element-image__caption\">Arsene Wenger’s early years at Arsenal brought huge success but trophies have been more elusive recently. Photograph: Tom Jenkins for the Guardian</span> </figcaption> </figure>";
 	res.send({"image":extractImageURI(main)});
 }
@@ -18,64 +17,62 @@ function test(req, res){
 
 db.on('error', console.error);
 db.once('open', function() {
-// Create your schemas and models here.
-var ArticleSchema = new mongoose.Schema({
-	id: String,
-	picurl: String,
-	headline: String,
-	trailtext: String,
-	url: String
-});
-// Compile a 'Movie' model using the movieSchema as the structure.
-// Mongoose also creates a MongoDB collection called 'Movies' for these documents.
-var Article = mongoose.model('Article', ArticleSchema);
+	// Create your schemas and models here.
+	var ArticleSchema = new mongoose.Schema({
+		id: String,
+		picurl: String,
+		headline: String,
+		trailtext: String,
+		url: String
+	});
 
-
+	Article = mongoose.model('Article', ArticleSchema);
 
 });
 
 mongoose.connect('mongodb://localhost/test');
 
 
-function saveNewsToDb(entry){
-	var json = JSON.parse(entry);
-	for(var i = 0; i < json.length; i++){
-		var obj = JSON.parse(json[i]);
-		var article = new Article({
-			id: obj.id,
-			picurl: extractImageURI(obj.fields.main),
-			headline: obj.fields.headline,
-			trailtext: obj.fields.trailtext,
-			url: obj.webUrl
-		});
+function saveNewsToDb(obj){
+	var article = new Article({
+		id: obj.id,
+		picurl: extractImageURI(obj.fields.main),
+		headline: obj.fields.headline,
+		trailtext: obj.fields.trailtext,
+		url: obj.webUrl
+	});
 
-		article.save(function(err, article) {
-			if (err) return console.error(err);
-			console.dir(article);
-		});
-	}
-
+	article.save(function(err, article) {
+		if (err) return console.error(err);
+		console.dir(article);
+	});
 }
+
 
 function getAllNews(req,res){
 	var json = getAllNewsJson();
-	console.log(json);
+	console.log("from getAllNews" + json);
 	saveNewsToDb(json);
-	Article.find(function(err, articles){
+	/*
+	return Article.find(function(err, articles){
 		if (err) return console.error(err);
 		console.dir(articles);
-		return articles;
-	})
+	});
+	*/
 }
 
 
 function getAllNewsJson(req,res){
-	var data = request('http://content.guardianapis.com/search?api-key=t3myqd7scnfu4t5w8zp7jx4v&show-fields=headline,trailText,main&page-size=100', function (error, response, body) {
-		  if (!error && response.statusCode == 200) {
-		  	var jsonData = JSON.parse(body);
-		  	console.log(jsonData.response.results);
-		  	return jsonData.response.results;
-		  }
+	var data = request('http://content.guardianapis.com/search?api-key=t3myqd7scnfu4t5w8zp7jx4v&show-fields=headline,trailText,main&page-size=10', function (error, response, body) {
+		if (!error && response.statusCode == 200) {
+			var jsonData = JSON.parse(body);
+			console.log(jsonData.response.results);
+			for (var i = 0; i < jsonData.response.results.length; i++){
+				saveNewsToDb(jsonData.response.results[i]);
+			}
+			//saveNewsToDb(jsonData.response.results);
+			res.send(jsonData.response.results);
+		}
 	})
 }
 
