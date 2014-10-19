@@ -82,20 +82,10 @@ function addPrefs(req, res){
 	Article.findOne( {_id: incomingID}, function(err, data) {
 		if (err) return console.error(err);
 		//res.send(data.content);
-		getKeywords(data.content);
-		//console.log(data.content);
-		//var mypref = prefs[Math.random() * (prefs.length - 1)];
-		/*
-		var preference = new Preference({
-			key:mypref
-		});
+		
 
-		preference.save(function(err, preference){
-			if (err) console.error(err);
-			console.dir(preference);
-			res.send(preference);
-		});
-		*/
+		getKeywords(data.content);
+		
 		// Preferences.findOne add prefs[0]
 
 	});
@@ -116,8 +106,16 @@ function getKeywords(content){
 	.end(function (result) {	
 		//console.log(result.status, result.headers, result.body);
 		//res.send(result);
-		console.log(result.body.keywords);
-		return result.body.keywords;
+		
+
+		var preference = new Preference({
+			key:result.body.keywords[0]
+		});
+
+		preference.save(function(err, preference){
+			if (err) console.error(err);
+			console.dir(preference);
+		});
 	});
 }
 
