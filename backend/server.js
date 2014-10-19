@@ -83,7 +83,7 @@ function addPrefs(req, res){
 		if (err) return console.error(err);
 		//res.send(data.content);
 		getKeywords(data.content);
-		console.log(data.content);
+		//console.log(data.content);
 		//var mypref = prefs[Math.random() * (prefs.length - 1)];
 		/*
 		var preference = new Preference({
@@ -107,10 +107,7 @@ function addPrefs(req, res){
 }
 
 
-
-
-
-function getKeywords(req, res, content){
+function getKeywords(content){
 	unirest.post("https://joanfihu-article-analysis-v1.p.mashape.com/text")
 	.header("X-Mashape-Key", "2LKLhCuMs2mshs6s3OxvtL2325czp1JNAz8jsnz6QtbmGesuEv")
 	.header("Content-Type", "application/x-www-form-urlencoded")
@@ -118,7 +115,8 @@ function getKeywords(req, res, content){
 	.field('title', 'hi')
 	.end(function (result) {	
 		//console.log(result.status, result.headers, result.body);
-		res.send(result.body.keywords);
+		//res.send(result);
+		console.log(result.body.keywords);
 		return result.body.keywords;
 	});
 }
@@ -133,7 +131,7 @@ function extractImageURI(main){
 
 var server = restify.createServer();
 server.get('/getallnews', getAllNews);
-server.get('/getkeywords', getKeywords);
+//server.get('/getkeywords', getKeywords);
 server.get('/addPrefs/:id', addPrefs)
 //server.get('');
 
