@@ -14,7 +14,7 @@ db.once('open', function() {
 		headline: String,
 		trailtext: String,
 		url: String,
-		body: String
+		content: String
 	});
 
 	Article = mongoose.model('Article', ArticleSchema);
@@ -39,7 +39,7 @@ function saveNewsToDb(obj){
 		headline: obj.fields.headline,
 		trailtext: trail,
 		url: obj.webUrl,
-		body: obj.fields.body
+		content: obj.fields.body
 	});
 
 	article.save(function(err, article) {
@@ -81,10 +81,11 @@ function addPrefs(req, res){
 	var incomingID = req.params.id;
 	Article.findOne( {_id: incomingID}, function(err, data) {
 		if (err) return console.error(err);
-		res.send(data);
-		var prefs = getKeywords(data.body);
-		var mypref = prefs[Math.random() * (prefs.length - 1)];
-
+		//res.send(data.content);
+		getKeywords(data.content);
+		console.log(data.content);
+		//var mypref = prefs[Math.random() * (prefs.length - 1)];
+		/*
 		var preference = new Preference({
 			key:mypref
 		});
@@ -92,7 +93,9 @@ function addPrefs(req, res){
 		preference.save(function(err, preference){
 			if (err) console.error(err);
 			console.dir(preference);
+			res.send(preference);
 		});
+		*/
 		// Preferences.findOne add prefs[0]
 
 	});
@@ -107,15 +110,16 @@ function addPrefs(req, res){
 
 
 
-function getKeywords(req, res){
+function getKeywords(req, res, content){
 	unirest.post("https://joanfihu-article-analysis-v1.p.mashape.com/text")
 	.header("X-Mashape-Key", "2LKLhCuMs2mshs6s3OxvtL2325czp1JNAz8jsnz6QtbmGesuEv")
 	.header("Content-Type", "application/x-www-form-urlencoded")
-	.field("text", "<p>A Roman Catholic Italian missionary order has paid out Â£120,000 to 11 former trainee priests following allegations of widespread sexual abuse at St Peter Claver College in Yorkshire during the 1960s and 70s.</p> <p>The men, most of whom have waived their right to anonymity, say they wanted acknowledgment rather than money and that the order, the Verona Fathers, must now be held accountable for the alleged abuse and its subsequent failure to act. Most were teenagers at the time of the abuse, but the youngest was 11.</p> <p>Four main abusers are named in the menâ€™s statements, although others are identified in corroborating statements from other victims.</p> <p>Two, Fr John Pinkman, the seminaryâ€™s junior housemaster, and Fr Domenico Valmaggia, its infirmarian, are now dead. One, Fr Romano Nardo, lives in the orderâ€™s mother house in Verona.</p> <p>One of the victims, Mark Murray, was recruited into Nardoâ€™s â€œGod Squadâ€, which was addressed on flagellation and the evils of sex.</p> <p>Murray was encouraged by Nardo to wash or â€œpurifyâ€ his naked body, ejaculating into a sink while Murray sponged him. He also showed Murray a cross he had carved on his chest, then used his fingernail to scrape one on Murrayâ€™s. â€œPain,â€ Nardo told him, â€œbrings you closer to God.â€</p>")
+	.field("text", content)
 	.field('title', 'hi')
 	.end(function (result) {	
-		console.log(result.status, result.headers, result.body);
+		//console.log(result.status, result.headers, result.body);
 		res.send(result.body.keywords);
+		return result.body.keywords;
 	});
 }
 
