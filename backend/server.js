@@ -23,11 +23,13 @@ mongoose.connect('mongodb://localhost/test');
 
 
 function saveNewsToDb(obj){
+	$ = cheerio.load(obj.fields.trailText);
+	var trail = $(obj.fields.trailText).text();
 	var article = new Article({
 		id: obj.id,
 		picurl: extractImageURI(obj.fields.main),
 		headline: obj.fields.headline,
-		trailtext: obj.fields.trailText,
+		trailtext: trail,
 		url: obj.webUrl
 	});
 
