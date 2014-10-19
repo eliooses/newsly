@@ -27,7 +27,7 @@ function saveNewsToDb(obj){
 		id: obj.id,
 		picurl: extractImageURI(obj.fields.main),
 		headline: obj.fields.headline,
-		trailtext: obj.fields.trailtext,
+		trailtext: obj.fields.trailText,
 		url: obj.webUrl
 	});
 
