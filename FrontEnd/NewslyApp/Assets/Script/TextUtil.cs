@@ -61,8 +61,8 @@ public class TextUtil {
 	
 	public void TextBox(GameObject textObject, string text, float x, float y ){
 		
-		float ortho = Camera.main.orthographicSize/10f;
-		
+		float ortho = 1f;//Camera.main.orthographicSize/10f;
+
 		//Text Formatting
 		int maxChar = Mathf.RoundToInt(3 * x);
 		

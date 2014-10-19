@@ -46,8 +46,32 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Script\ArticleManager.cs" />
      <Compile Include="Assets\Script\TextUtil.cs" />
      <Compile Include="Assets\Script\article.cs" />
+     <Compile Include="Assets\uWebKit\Internal\Activation\UWKActivation.cs" />
+     <Compile Include="Assets\uWebKit\Internal\UWKCore.cs" />
+     <Compile Include="Assets\uWebKit\Internal\UWKDeploySupport.cs" />
+     <Compile Include="Assets\uWebKit\Internal\UWKJson.cs" />
+     <Compile Include="Assets\uWebKit\Internal\UWKPlugin.cs" />
+     <Compile Include="Assets\uWebKit\UWKJSObject.cs" />
+     <Compile Include="Assets\uWebKit\UWKWebView.cs" />
+     <Compile Include="Assets\uWebKitExamples\Facebook\FacebookAPI.cs" />
+     <Compile Include="Assets\uWebKitExamples\Facebook\FacebookExample.cs" />
+     <Compile Include="Assets\uWebKitExamples\Facebook\FacebookLogin.cs" />
+     <Compile Include="Assets\uWebKitExamples\Scripts\AlphaMaskExample.cs" />
+     <Compile Include="Assets\uWebKitExamples\Scripts\ExampleLoader.cs" />
+     <Compile Include="Assets\uWebKitExamples\Scripts\FacebookExampleMenu.cs" />
+     <Compile Include="Assets\uWebKitExamples\Scripts\JavascriptExample.cs" />
+     <Compile Include="Assets\uWebKitExamples\Scripts\SceneExample.cs" />
+     <Compile Include="Assets\uWebKitExamples\Scripts\SourceCodePopup.cs" />
+     <Compile Include="Assets\uWebKitExamples\Scripts\UnityInfoPage.cs" />
+     <Compile Include="Assets\uWebKitExamples\Scripts\WebBrowser.cs" />
+     <Compile Include="Assets\uWebKitExamples\Scripts\WebBrowserExample.cs" />
+     <Compile Include="Assets\uWebKitExamples\Scripts\WebGUI.cs" />
+     <Compile Include="Assets\uWebKitExamples\Scripts\WebGUIExample.cs" />
+     <Compile Include="Assets\uWebKitExamples\Scripts\WebTexture.cs" />
+     <Compile Include="Assets\uWebKitExamples\Scripts\WebTextureExample.cs" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\NoiseEffectShaderRGB.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_DepthOfField\SeparableWeightedBlurDof34.shader" />
@@ -69,9 +93,12 @@
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_DepthOfField\DepthOfFieldDX11.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\ContrastComposite.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_Antialiasing\FXAAPreset3.shader" />
+     <None Include="Assets\UWEBKIT_LICENSE_SOURCE.txt" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\FisheyeShader.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\Contrast Stretch\Apply.shader" />
+     <None Include="Assets\UWEBKIT_LICENSE_BINARY.txt" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\frag_ao.cginc" />
+     <None Include="Assets\UWEBKIT_GETTINGSTARTED.txt" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_DepthOfField\DepthOfField34.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\MobileBlur.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\SSAOShader.shader" />
@@ -87,6 +114,7 @@
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_DepthOfField\Bokeh34.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\CameraMotionBlurDX11.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\SeparableBlurPlus.shader" />
+     <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\MultiPassHollywoodFlares.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\BlurEffectConeTaps.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\CameraMotionBlur.shader" />
@@ -117,6 +145,9 @@
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_Antialiasing\FXAAPreset2.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\BlurAndFlares.shader" />
      <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\BlendForBloom.shader" />
+ <Reference Include="LitJSON">
+ <HintPath>/Users/dav/Git/Newsly/FrontEnd/NewslyApp/Assets/LitJSON.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
