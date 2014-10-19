@@ -25,6 +25,8 @@ db.once('open', function() {
 
 	Preference = mongoose.model('Preference', PreferenceSchema);
 
+
+
 });
 
 mongoose.connect('mongodb://localhost/test');
@@ -62,19 +64,28 @@ function getAllNews(req,res){
 	})
 }
 
-/*function getPrefNews(req,res){
-	var data = request('http://content.guardianapis.com/search?api-key=t3myqd7scnfu4t5w8zp7jx4v&show-fields=headline,trailText,main&page-size=10', function (error, response, body) {
-		if (!error && response.statusCode == 200) {
-			var jsonData = JSON.parse(body);
-			console.log(jsonData.response.results);
-			for (var i = 0; i < jsonData.response.results.length; i++){
-				saveNewsToDb(jsonData.response.results[i]);
-			}
-			//saveNewsToDb(jsonData.response.results);
-			res.send(jsonData.response.results);
+function getPrefNews(req,res){
+	var prefs = Preference.find(function(err, preference){
+		if (err) console.log();
+		var strarray= [];
+		for (var i = 0; i< preference.length; i++){
+			strarray.push(preference[i].key);
 		}
-	})
-}*/
+		console.log('http://content.guardianapis.com/search?api-key=test&show-fields=trailtext,main,body&q='+strarray.toString());
+		var data = request('http://content.guardianapis.com/search?api-key=test&show-fields=trailtext,main,body&q='+strarray.toString(), function (error, response, body) {
+			if (!error && response.statusCode == 200) {
+				var jsonData = JSON.parse(body);
+				console.log(jsonData.response.results);
+				for (var i = 0; i < jsonData.response.results.length; i++){
+					saveNewsToDb(jsonData.response.results[i]);
+				}
+				//saveNewsToDb(jsonData.response.results);
+				//res.send(jsonData.response.results);
+			}
+		});
+	});
+	
+}
 
 
 function addPrefs(req, res){
@@ -129,7 +140,7 @@ function extractImageURI(main){
 
 var server = restify.createServer();
 server.get('/getallnews', getAllNews);
-//server.get('/getkeywords', getKeywords);
+server.get('/getprefnews', getPrefNews);
 server.get('/addPrefs/:id', addPrefs)
 //server.get('');
 
