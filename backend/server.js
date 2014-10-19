@@ -65,30 +65,26 @@ function savePrefNewsToDb(obj){
 	});
 }
 
-function getAllNews(req,res){
-	var prefs = Preference.find(function(err, preference){
-		if (err) console.log();
-		var strarray= [];
-		for (var i = 0; i< preference.length; i++){
-			strarray.push(preference[i].key);
-		}
-		var data = request('http://content.guardianapis.com/search?api-key=t3myqd7scnfu4t5w8zp7jx4v&show-fields=headline,trailText,main&page-size=50&q='+strarray.toString(), function (error, response, body) {
-			if (!error && response.statusCode == 200) {
-				var jsonData = JSON.parse(body);
-				console.log(jsonData.response.results);
-				for (var i = 0; i < jsonData.response.results.length; i++){
-					saveNewsToDb(jsonData.response.results[i]);
-				}				//res.send(jsonData.response.results);
-
+function fetchNews(req,res){
+	var data = request('http://content.guardianapis.com/search?api-key=t3myqd7scnfu4t5w8zp7jx4v&show-fields=headline,trailText,main&page=3&page-size=10', function (error, response, body) {
+		if (!error && response.statusCode == 200) {
+			var jsonData = JSON.parse(body);
+			console.log(jsonData.response.results);
+			for (var i = 0; i < jsonData.response.results.length; i++){
+				saveNewsToDb(jsonData.response.results[i]);
 			}
-		});
-						//saveNewsToDb(jsonData.response.results);
-		Article.find(function(err,data){
-			res.send(data);
-		});
-
+			//saveNewsToDb(jsonData.response.results);
+			//res.send(jsonData.response.results);
+		}
 	});
 }
+
+function getAllNews(req,res){
+	Article.find(function(err,data){
+		res.send(data);
+	})
+}
+
 
 function getPrefNews(req,res){
 	var prefs = Preference.find(function(err, preference){
@@ -97,6 +93,7 @@ function getPrefNews(req,res){
 		for (var i = 0; i< preference.length; i++){
 			strarray.push(preference[i].key);
 		}
+		console.log()
 		var data = request('http://content.guardianapis.com/search?api-key=t3myqd7scnfu4t5w8zp7jx4v&show-fields=headline,trailText,main&page-size=100&q='+strarray.toString(), function (error, response, body) {
 			if (!error && response.statusCode == 200) {
 				var prefData = JSON.parse(body);
@@ -152,7 +149,7 @@ function extractImageURI(main){
 
 var server = restify.createServer();
 server.get('/getallnews', getAllNews);
-//server.get('/getprefnews', getPrefNews);
+server.get('/fetchNews', getPrefNews);
 server.get('/addPrefs/:id', addPrefs)
 //server.get('');
 
