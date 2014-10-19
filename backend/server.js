@@ -3,6 +3,7 @@ var cheerio = require('cheerio');
 var mongoose = require('mongoose');
 var db = mongoose.connection;
 var request = require('request');
+var unirest = require('unirest');
 
 db.on('error', console.error);
 db.once('open', function() {
@@ -53,6 +54,24 @@ function getAllNews(req,res){
 	})
 }
 
+
+/*function userHasLiked(true){
+	if (!null)
+
+}*/
+
+function getKeywords(){
+	unirest.post("https://joanfihu-article-analysis-v1.p.mashape.com/text")
+	.header("X-Mashape-Key", "2LKLhCuMs2mshs6s3OxvtL2325czp1JNAz8jsnz6QtbmGesuEv")
+	.header("Content-Type", "application/x-www-form-urlencoded")
+	.field("text", "A new report from Pew Research brings together almost 2,000 experts to comprehensively assess the effect of robots on the workplace</p><p>Experts are divided over the role of robots over the next decade, with some arguing that they will create more jobs than they displace, and others worrying that they could lead to income inequality and a breakdown in social order.</p><p>The findings come from <a href='http://www.pewinternet.org/packages/the-web-at-25/'>a report by Pew Research</a>, which surveyed almost two thousand individuals with expertise in artificial intelligence (AI), robotics and economics, to find out their predictions for the role of automation between today and 2025. The experts were almost perfectly split, with 52% predicting an optimistic path, and 48% worrying about the future.")
+	.field('title', 'hi')
+	.end(function (result) {	
+		console.log(result.status, result.headers, result.body);
+	});
+}
+
+
 function extractImageURI(main){
 	$ = cheerio.load(main);
 	var imgurl = $('figure img').attr('src');
@@ -62,6 +81,7 @@ function extractImageURI(main){
 
 var server = restify.createServer();
 server.get('/getallnews', getAllNews);
+server.get('/getkeywords', getKeywords);
 //server.get('');
 
 
