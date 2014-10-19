@@ -60,7 +60,7 @@ function getAllNews(req,res){
 
 }*/
 
-function getKeywords(){
+function getKeywords(req, res){
 	unirest.post("https://joanfihu-article-analysis-v1.p.mashape.com/text")
 	.header("X-Mashape-Key", "2LKLhCuMs2mshs6s3OxvtL2325czp1JNAz8jsnz6QtbmGesuEv")
 	.header("Content-Type", "application/x-www-form-urlencoded")
@@ -68,6 +68,7 @@ function getKeywords(){
 	.field('title', 'hi')
 	.end(function (result) {	
 		console.log(result.status, result.headers, result.body);
+		res.send(result.body);
 	});
 }
 
