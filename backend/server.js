@@ -13,8 +13,7 @@ db.once('open', function() {
 		picurl: String,
 		headline: String,
 		trailtext: String,
-		url: String,
-		content: String
+		url: String
 	});
 
 	Article = mongoose.model('Article', ArticleSchema);
@@ -40,8 +39,7 @@ function saveNewsToDb(obj){
 		picurl: extractImageURI(obj.fields.main),
 		headline: obj.fields.headline,
 		trailtext: trail,
-		url: obj.webUrl,
-		content: obj.fields.body
+		url: obj.webUrl
 	});
 
 	article.save(function(err, article) {
@@ -50,18 +48,46 @@ function saveNewsToDb(obj){
 	});
 }
 
+function savePrefNewsToDb(obj){
+	$ = cheerio.load(obj.fields.trailText);
+	var trail = $(obj.fields.trailText).text();
+	var article = new Article({
+		id: obj.id,
+		picurl: extractImageURI(obj.fields.main),
+		headline: obj.fields.headline,
+		trailtext: trail,
+		url: obj.webUrl
+	});
+
+	article.save(function(err, article) {
+		if (err) return console.error(err);
+		//console.dir(article);
+	});
+}
+
 function getAllNews(req,res){
-	var data = request('http://content.guardianapis.com/search?api-key=t3myqd7scnfu4t5w8zp7jx4v&show-fields=headline,trailText,main,body&page-size=10', function (error, response, body) {
-		if (!error && response.statusCode == 200) {
-			var jsonData = JSON.parse(body);
-			console.log(jsonData.response.results);
-			for (var i = 0; i < jsonData.response.results.length; i++){
-				saveNewsToDb(jsonData.response.results[i]);
-			}
-			//saveNewsToDb(jsonData.response.results);
-			res.send(jsonData.response.results);
+	var prefs = Preference.find(function(err, preference){
+		if (err) console.log();
+		var strarray= [];
+		for (var i = 0; i< preference.length; i++){
+			strarray.push(preference[i].key);
 		}
-	})
+		var data = request('http://content.guardianapis.com/search?api-key=t3myqd7scnfu4t5w8zp7jx4v&show-fields=headline,trailText,main&page-size=50&q='+strarray.toString(), function (error, response, body) {
+			if (!error && response.statusCode == 200) {
+				var jsonData = JSON.parse(body);
+				console.log(jsonData.response.results);
+				for (var i = 0; i < jsonData.response.results.length; i++){
+					saveNewsToDb(jsonData.response.results[i]);
+				}				//res.send(jsonData.response.results);
+
+			}
+		});
+						//saveNewsToDb(jsonData.response.results);
+		Article.find(function(err,data){
+			res.send(data);
+		});
+
+	});
 }
 
 function getPrefNews(req,res){
@@ -71,23 +97,16 @@ function getPrefNews(req,res){
 		for (var i = 0; i< preference.length; i++){
 			strarray.push(preference[i].key);
 		}
-		console.log('http://content.guardianapis.com/search?api-key=t3myqd7scnfu4t5w8zp7jx4v&show-fields=headline,trailText,main,body&page-size=10&q='+strarray.toString());
-		var data = request('http://content.guardianapis.com/search?api-key=test&show-fields=trailtext,main,body&q='+strarray.toString(), function (error, response, body) {
+		var data = request('http://content.guardianapis.com/search?api-key=t3myqd7scnfu4t5w8zp7jx4v&show-fields=headline,trailText,main&page-size=100&q='+strarray.toString(), function (error, response, body) {
 			if (!error && response.statusCode == 200) {
-				var jsonData = JSON.parse(body);
-				console.log(jsonData.response.results);
-				res.send(jsonData.response.results);
-				/*
-				for (var i = 0; i < jsonData.response.results.length; i++){
-					saveNewsToDb(jsonData.response.results[i]);
-				}
-				*/
-				//saveNewsToDb(jsonData.response.results);
-				//res.send(jsonData.response.results);
+				var prefData = JSON.parse(body);
+				for (var i = 0; i < prefData.response.results.length; i++){
+					savePrefNewsToDb(prefData.response.results[i]);
+					console.log(i + prefData.response.results[i].id);
+				}				
 			}
 		});
 	});
-	
 }
 
 
@@ -96,18 +115,8 @@ function addPrefs(req, res){
 	Article.findOne( {_id: incomingID}, function(err, data) {
 		if (err) return console.error(err);
 		//res.send(data.content);
-		
-
 		getKeywords(data.content);
-		
-		// Preferences.findOne add prefs[0]
-
 	});
-	//take in id
-	//query for body of article from id
-	//use get keywords
-	// store in preferences
-
 }
 
 
@@ -143,7 +152,7 @@ function extractImageURI(main){
 
 var server = restify.createServer();
 server.get('/getallnews', getAllNews);
-server.get('/getprefnews', getPrefNews);
+//server.get('/getprefnews', getPrefNews);
 server.get('/addPrefs/:id', addPrefs)
 //server.get('');
 
